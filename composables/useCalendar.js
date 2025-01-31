@@ -9,9 +9,10 @@ export function useCalendar() {
 
     return Array.from({ length: totalDays }, (_, i) => {
       const date = new Date(year, month, i + 1);
+      const localDate = date.toLocaleDateString("en-CA"); // Format YYYY-MM-DD
       return {
         index: i + 1,
-        date: date.toISOString().split("T")[0],
+        date: localDate,
       };
     });
   };
@@ -23,13 +24,13 @@ export function useCalendar() {
   });
 
   const isInRange = (task, date) => {
-    const taskStartDate = new Date(task.startDate);
-    const taskEndDate = new Date(task.endDate);
-    const targetDate = new Date(date);
+    const taskStartDate = new Date(task.startDate + "T00:00:00");
+    const taskEndDate = new Date(task.endDate + "T23:59:59");
+    const targetDate = new Date(date + "T00:00:00");
 
-    taskStartDate.setHours(0, 0, 0, 0);
-    taskEndDate.setHours(23, 59, 59, 999);
-    targetDate.setHours(0, 0, 0, 0);
+    console.log("Task Start Date:", taskStartDate);
+    console.log("Task End Date:", taskEndDate);
+    console.log("Target Date:", targetDate);
 
     return targetDate >= taskStartDate && targetDate <= taskEndDate;
   };
