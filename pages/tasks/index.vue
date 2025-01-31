@@ -21,11 +21,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useCalendar } from './useCalendar';
-import CalendarHeader from './CalendarHeader.vue';
-import TaskRow from './TaskRow.vue';
-
 const { daysInMonth, gridTemplate, isInRange } = useCalendar();
 
 const tasks = ref([
