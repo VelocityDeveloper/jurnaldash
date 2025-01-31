@@ -1,41 +1,19 @@
 <template>
   <div class="p-4">
-    <h1 class="text-2xl font-bold mb-4">Project Manager - ClickUp Style</h1>
+    <h1 class="text-2xl font-bold mb-4">Task</h1>
 
     <div class="border rounded-lg overflow-hidden">
-      <!-- Wrapper dengan scroll horizontal -->
       <div class="overflow-x-auto">
         <div class="min-w-max">
-          <!-- Header dengan Tanggal -->
-          <div class="grid border-b border-gray-300 bg-gray-100 sticky top-0 z-10" :style="gridTemplate">
-            <div class="p-2 font-bold border-r border-gray-300 min-w-[200px] sticky left-0 z-10 bg-gray-200">Proyek / Tugas</div>
-            <div v-for="day in daysInMonth" :key="day.date" class="p-2 text-center border-r border-gray-300">
-              {{ day.index }}
-            </div>
-          </div>
-
-          <!-- Data Tugas -->
-          <div v-for="task in tasks" :key="task.id" class="grid border-b border-gray-300" :style="gridTemplate">
-            <!-- Nama Proyek -->
-            <div class="p-2 font-semibold border-r border-gray-300 min-w-[200px] bg-white sticky left-0 z-10">
-              {{ task.name }}
-            </div>
-
-            <!-- Status Per Hari -->
-            <div v-for="day in daysInMonth" :key="day.date" class="p-2 text-center border-r border-gray-300">
-              <span
-                v-if="isInRange(task, day.date)"
-                class="px-2 py-1 text-xs text-white"
-                :class="[
-                  task.status,
-                  day.date === task.startDate ? 'rounded-l' : '',
-                  day.date === task.endDate ? 'rounded-r' : '',
-                ]"
-              >
-                {{ task.name }}
-              </span>
-            </div>
-          </div>
+          <CalendarHeader :daysInMonth="daysInMonth" :gridTemplate="gridTemplate" />
+          <TaskRow
+            v-for="task in tasks"
+            :key="task.id"
+            :task="task"
+            :daysInMonth="daysInMonth"
+            :gridTemplate="gridTemplate"
+            :isInRange="isInRange"
+          />
         </div>
       </div>
     </div>
@@ -43,42 +21,27 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref } from 'vue';
+import { useCalendar } from './useCalendar';
+import CalendarHeader from './CalendarHeader.vue';
+import TaskRow from './TaskRow.vue';
 
-// Hitung jumlah hari dalam bulan ini
-const getDaysInMonth = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const totalDays = new Date(year, month + 1, 0).getDate();
+const { daysInMonth, gridTemplate, isInRange } = useCalendar();
 
-  return Array.from({ length: totalDays }, (_, i) => {
-    const date = new Date(year, month, i + 1);
-    return {
-      index: i + 1,
-      date: date.toISOString().split("T")[0],
-    };
-  });
-};
-
-// Daftar proyek / tugas (data dummy)
-const tasks = computed(() => [
-  { id: 1, name: "Landing Page", status: "bg-green-500", startDate: "2025-01-03", endDate: "2025-01-04" },
-  { id: 2, name: "API Backend", status: "bg-yellow-500", startDate: "2025-01-10", endDate: "2025-01-12" },
-  { id: 3, name: "Mobile App", status: "bg-blue-500", startDate: "2025-01-15", endDate: "2025-01-18" },
-  { id: 4, name: "Testing", status: "bg-red-500", startDate: "2025-01-25", endDate: "2025-01-27" },
+const tasks = ref([
+  { id: 1, name: "Landing Page", status: "bg-green-500", startDate: "2025-01-01", endDate: "2025-01-04" },
+  { id: 2, name: "API Backend", status: "bg-yellow-500", startDate: "2025-01-04", endDate: "2025-01-04" },
+  { id: 3, name: "Mobile App", status: "bg-blue-500", startDate: "2025-01-06", endDate: "2025-01-10" },
+  { id: 4, name: "Testing", status: "bg-red-500", startDate: "2025-01-07", endDate: "2025-01-09" },
+  { id: 5, name: "Deployment", status: "bg-gray-500", startDate: "2025-01-25", endDate: "2025-01-27" },
+  { id: 6, name: "Maintenance", status: "bg-gray-500", startDate: "2025-01-05", endDate: "2025-01-07" },
+  { id: 7, name: "Support", status: "bg-gray-500", startDate: "2025-01-08", endDate: "2025-01-10" },
+  { id: 8, name: "Monitoring", status: "bg-gray-500", startDate: "2025-01-12", endDate: "2025-01-14" },
+  { id: 9, name: "Security", status: "bg-gray-500", startDate: "2025-01-15", endDate: "2025-01-17" },
+  { id: 10, name: "Analytics", status: "bg-gray-500", startDate: "2025-01-18", endDate: "2025-01-20" },
+  { id: 11, name: "Data Analysis", status: "bg-gray-500", startDate: "2025-01-21", endDate: "2025-01-23" },
+  { id: 12, name: "Data Visualization", status: "bg-gray-500", startDate: "2025-01-24", endDate: "2025-01-26" },
+  { id: 13, name: "Data Cleaning", status: "bg-gray-500", startDate: "2025-01-27", endDate: "2025-01-29" },
+  { id: 14, name: "Data Processing", status: "bg-gray-500", startDate: "2025-01-30", endDate: "2025-01-31" },
 ]);
-
-// Data computed untuk looping di template
-const daysInMonth = computed(() => getDaysInMonth());
-
-// CSS Grid Dynamic untuk jumlah hari dalam bulan
-const gridTemplate = computed(() => {
-  return `grid-template-columns: 200px repeat(${daysInMonth.value.length}, 1fr);`;
-});
-
-// Fungsi untuk mengecek apakah hari termasuk dalam rentang tugas
-const isInRange = (task, date) => {
-  return date >= task.startDate && date <= task.endDate;
-};
 </script>
