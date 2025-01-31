@@ -73,37 +73,10 @@ const items = ref([
       href:'/',
   },
   {
-      key: 'products',
-      label: 'Products',
-      icon: 'lucide:box',
-      items: [
-          {            
-            key: 'products_all',
-            label: 'Semua Product',
-            href:'/products',
-          },
-          {            
-            key: 'products_category',
-            label: 'Category',
-            href:'/products/category',
-          },
-          {            
-            key: 'products_brand',
-            label: 'Brand',
-            href:'/products/brand',
-          },
-          {            
-            key: 'products_type',
-            label: 'Type',
-            href:'/products/type',
-          }
-      ]
-  },
-  {
-      key: 'customer',
-      label: 'Customers',
-      icon: 'lucide:users',
-      href:'/customer',
+      key: 'tasks',
+      label: 'Tasks',
+      icon: 'lucide:list-check',
+      href:'/tasks',
   },
 ]);
 
