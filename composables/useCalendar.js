@@ -24,13 +24,9 @@ export function useCalendar() {
   });
 
   const isInRange = (task, date) => {
-    const taskStartDate = new Date(task.startDate + "T00:00:00");
-    const taskEndDate = new Date(task.endDate + "T23:59:59");
-    const targetDate = new Date(date + "T00:00:00");
-
-    console.log("Task Start Date:", taskStartDate);
-    console.log("Task End Date:", taskEndDate);
-    console.log("Target Date:", targetDate);
+    const taskStartDate = new Date(task.start);
+    const taskEndDate = new Date(task.end);
+    const targetDate = new Date(date);
 
     return targetDate >= taskStartDate && targetDate <= taskEndDate;
   };
