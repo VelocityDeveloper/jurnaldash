@@ -21,7 +21,7 @@
         </div>
 
         <div>
-          <div class="font-bold text-xl">TOPUP</div>
+          <div class="font-bold text-xl">Jurnal</div>
           <div class="text-xs opacity-50">Velocity Developer</div>
         </div>
       </div>
@@ -34,16 +34,17 @@
           <InputText type="password" id="password" v-model="credentials.password" class="w-full" />
           <label for="password">Password</label>
       </IftaLabel>
-      <div class="flex justify-center">
-        <Button label="Login" type="submit" :loading="isLoading" class="!w-full">
-          <Icon name="lucide:log-in"/> 
-          <span v-if="isLoading">
-            memproses...
+      <div class="text-center">
+
+        <Button label="Login" type="submit" :loading="isLoading" class="!w-full shadow">          
+          <span v-if="isLoading" class="flex items-center gap-1">
+            <Icon name="lucide:loader-circle" class="animate-spin" mode="svg"/>  memproses...
           </span>
-          <span v-else>
-            Login
+          <span v-else class="flex items-center gap-1">
+            <Icon name="lucide:log-in" mode="svg"/> Masuk 
           </span>
         </Button>
+
       </div>
   </form>
 </template>
