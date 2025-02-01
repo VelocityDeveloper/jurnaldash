@@ -1,6 +1,12 @@
 <template>
-  <div class="grid border-gray-300" :style="gridTemplate">
+  <div class="grid border-gray-100 border-b" :style="gridTemplate">
+    <div class="sticky p-2 start-0 top-0 z-5 border-b border-gray-200 bg-gray-100">
+      <span class="truncate block text-sm">
+        {{ task.title }}
+      </span>
+    </div>
     <div v-for="day in daysInMonth" :key="day.date" class="text-center border-gray-300">
+      
       <span
         v-if="isInRange(task, day.date)"
         class="px-2 text-xs text-white w-full inline-block py-1 min-h-4"
@@ -8,9 +14,7 @@
           task.status=='ongoing' ? 'bg-green-500' : 'bg-gray-500'
         ]"
       >
-        <span v-if="isActive(task, day)" class="truncate">
-          {{ task.title }}
-        </span>
+      
       </span>
     </div>
   </div>

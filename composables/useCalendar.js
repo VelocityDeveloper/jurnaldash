@@ -30,13 +30,18 @@ export function useCalendar() {
   });
 
   const gridTemplate = computed(() => {
-    return `grid-template-columns: 200px repeat(${daysInMonth.value.length}, minmax(100px, auto));`;
+    return `grid-template-columns: 200px repeat(${daysInMonth.value.length}, minmax(30px, auto));`;
   });
 
   const isInRange = (task, date) => {
     const taskStartDate = new Date(task.start);
     const taskEndDate = new Date(task.end);
     const targetDate = new Date(date);
+
+    // Atur jam, menit, dan detik ke 0
+    taskStartDate.setHours(0, 0, 0, 0);
+    taskEndDate.setHours(0, 0, 0, 0);
+    targetDate.setHours(0, 0, 0, 0);
 
     return targetDate >= taskStartDate && targetDate <= taskEndDate;
   };

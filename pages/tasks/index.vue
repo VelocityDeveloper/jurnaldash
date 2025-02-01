@@ -1,17 +1,17 @@
 <template>
-  <div class="p-4">
-    <h1 class="text-2xl font-bold mb-4">Task</h1>
+  <div>
 
-    <div class="flex justify-end mb-3">
+    <div class="flex justify-end mb-2">
       <Button size="small" @click="openDialog(null,'add')">
         <Icon name="lucide:plus" />  Tambah
       </Button>
     </div>
 
     <div class="border rounded-lg overflow-hidden">
-      <div class="overflow-x-auto">
+      <div class="overflow-auto max-h-[70vh]">
         <div class="min-w-max">
           <CalendarHeader :daysInMonth="daysInMonth" :gridTemplate="gridTemplate" />
+          
           <TaskRow
             v-for="task in data"
             :key="task.id"
@@ -20,6 +20,7 @@
             :gridTemplate="gridTemplate"
             :isInRange="isInRange"
           />
+
         </div>
       </div>
     </div>
