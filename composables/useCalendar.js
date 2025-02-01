@@ -1,15 +1,12 @@
 import { computed } from "vue";
 
 export function useCalendar() {
-  const getDaysInMonth = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth();
-    const totalDays = new Date(year, month + 1, 0).getDate();
+  const getDaysInMonth = (year, month) => {
+    const totalDays = new Date(year, month + 1, 0).getDate(); // Jumlah hari dalam bulan
 
     return Array.from({ length: totalDays }, (_, i) => {
-      const date = new Date(year, month, i + 1);
-      const localDate = date.toLocaleDateString("en-CA"); // Format YYYY-MM-DD
+      const date = new Date(year, month, i + 1); // Mulai dari tanggal 1
+      const localDate = formatDateLocal(date); // Format: yyyy-mm-dd
       return {
         index: i + 1,
         date: localDate,
@@ -17,7 +14,20 @@ export function useCalendar() {
     });
   };
 
-  const daysInMonth = computed(() => getDaysInMonth());
+  // Fungsi untuk memformat tanggal lokal tanpa timezone
+  const formatDateLocal = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const daysInMonth = computed(() => {
+    const now = new Date();
+    const getDaysInMonthJJJ = getDaysInMonth(now.getFullYear(), now.getMonth());
+    console.log(getDaysInMonthJJJ);
+    return getDaysInMonthJJJ;
+  });
 
   const gridTemplate = computed(() => {
     return `grid-template-columns: 200px repeat(${daysInMonth.value.length}, minmax(100px, auto));`;
