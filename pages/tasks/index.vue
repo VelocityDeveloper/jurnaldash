@@ -1,10 +1,17 @@
 <template>
   <div>
 
-    <div class="flex justify-end mb-2">
-      <Button size="small" @click="openDialog(null,'add')">
+    <div class="flex justify-end md:justify-between gap-2 mb-2">
+
+      <Button size="small" @click="openDialog(null,'add')" severity="info">
         <Icon name="lucide:plus" />  Tambah
       </Button>
+
+      <form class="flex justify-end gap-2">
+        <DatePicker v-model="formSearch.monthYear" view="month" dateFormat="mm/yy" size="small" />
+        <Select v-model="formSearch.user" :options="optionUsers" optionLabel="label" optionValue="value" placeholder="Select User" />
+      </form>
+
     </div>
 
     <div class="border rounded-lg overflow-hidden">
@@ -13,16 +20,29 @@
 
           <CalendarHeader :daysInMonth="daysInMonth" :gridTemplate="gridTemplate" />
           
-          <TaskRow
-            v-for="task in data"
-            :key="task.id"
-            :task="task"
-            :daysInMonth="daysInMonth"
-            :gridTemplate="gridTemplate"
-            :isInRange="isInRange"
-            @click="openDialog(task,'preview')"
-            class="odd:bg-slate-100 even:bg-white"
-          />
+          <div v-if="status=='pending'">
+            <Skeleton v-for="i in 15" :key="i" width="100%" height="2rem" class="mb-2 mx-1"></Skeleton>
+          </div>
+
+          <div v-else>
+
+            <TaskRow
+              v-if="data.length > 0"
+              v-for="task in data"
+              :key="task.id"
+              :task="task"
+              :daysInMonth="daysInMonth"
+              :gridTemplate="gridTemplate"
+              :isInRange="isInRange"
+              @click="openDialog(task,'preview')"
+              class="odd:bg-slate-100 even:bg-white relative"
+            />
+
+            <div v-else class="p-2 text-center">
+              <div class="text-sm opacity-50">Tidak ada data</div>
+            </div>
+            
+          </div>
 
         </div>
       </div>
@@ -41,10 +61,47 @@ definePageMeta({
     title: "Tasks",
 });
 const client = useSanctumClient();
+const user = useSanctumUser() as any;
+
+const formSearch = ref({
+  monthYear:  new Date(),
+  user: null
+});
+
+const optionUsers = ref([] as any);
+
+onMounted( async () => {
+  if(user.value){
+    formSearch.value.user = user.value.id
+  }
+  try {
+    const response = await client('/api/options/users');
+    optionUsers.value = response;
+  } catch (error) {
+    console.error(error);
+  }
+})
+
+
 const { data, status, error, refresh } = await useAsyncData(
-    'task',
-    () => client('/api/task')
+    'tasks',
+    fetchTasks
 )
+
+function fetchTasks() {
+  return client('/api/task', {
+    params: {
+      date: formSearch.value.monthYear,
+      user_id: formSearch.value.user
+    }
+  });
+}
+
+//watch perubahan formSearch
+watch(formSearch.value, () => {
+  refresh();
+})
+
 const selectedItem = ref();
 const dialog = ref(false);
 const dialogAction = ref('add');
@@ -56,5 +113,4 @@ const openDialog = (data: any, action: any) => {
 }
 
 const { daysInMonth, gridTemplate, isInRange } = useCalendar();
-
 </script>

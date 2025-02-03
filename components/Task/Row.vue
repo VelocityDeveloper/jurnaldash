@@ -1,7 +1,7 @@
 <template>
   <div class="grid border-gray-100 border-b" :style="gridTemplate">
     
-    <div class="sticky p-2 start-0 top-0 z-10 border-e border-gray-200 me-2">
+    <div class="sticky p-2 start-0 top-0 z-10 bg-white border-e border-gray-200 me-2">
       <span class="truncate block text-sm">
         {{ task.title }}
       </span>
