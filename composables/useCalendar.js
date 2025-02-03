@@ -25,7 +25,7 @@ export function useCalendar() {
   const daysInMonth = computed(() => {
     const now = new Date();
     const getDaysInMonthJJJ = getDaysInMonth(now.getFullYear(), now.getMonth());
-    console.log(getDaysInMonthJJJ);
+    // console.log(getDaysInMonthJJJ);
     return getDaysInMonthJJJ;
   });
 

@@ -9,7 +9,8 @@
 
     <div class="border rounded-lg overflow-hidden">
       <div class="overflow-auto max-h-[70vh]">
-        <div class="min-w-max">
+        <div class="min-w-max list-task">
+
           <CalendarHeader :daysInMonth="daysInMonth" :gridTemplate="gridTemplate" />
           
           <TaskRow
@@ -19,6 +20,8 @@
             :daysInMonth="daysInMonth"
             :gridTemplate="gridTemplate"
             :isInRange="isInRange"
+            @click="openDialog(task,'preview')"
+            class="odd:bg-slate-100 even:bg-white"
           />
 
         </div>
@@ -26,8 +29,9 @@
     </div>
   </div>
   
-  <Dialog v-model:visible="dialog" :header="selectedItem ? selectedItem.product_name : 'Tambah Task'" :style="{ width: '30rem', minHeight: '50vh' }" :breakpoints="{ '1000px': '40rem', '768px': '90vw' }" :modal="true">
+  <Dialog v-model:visible="dialog" :header="selectedItem ? 'Preview Task' : 'Tambah Task'" :style="{ width: '30rem', minHeight: '50vh' }" :breakpoints="{ '1000px': '40rem', '768px': '90vw' }" :modal="true">
     <TaskFormAdd v-if="dialogAction == 'add'" />
+    <TaskPreview v-else :item="selectedItem"/>
   </Dialog>
 
 </template>

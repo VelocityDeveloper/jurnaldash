@@ -1,22 +1,26 @@
 <template>
   <div class="grid border-gray-100 border-b" :style="gridTemplate">
-    <div class="sticky p-2 start-0 top-0 z-5 border-b border-gray-200 bg-gray-100">
+    
+    <div class="sticky p-2 start-0 top-0 z-10 border-e border-gray-200 me-2">
       <span class="truncate block text-sm">
         {{ task.title }}
       </span>
     </div>
-    <div v-for="day in daysInMonth" :key="day.date" class="text-center border-gray-300">
+
+    <div v-for="day in daysInMonth" :key="day.date" class="flex items-center z-1">
       
       <span
         v-if="isInRange(task, day.date)"
-        class="px-2 text-xs text-white w-full inline-block py-1 min-h-4"
+        class="px-2 text-xs text-white w-full inline-block py-1 min-h-5 cursor-pointer"
         :class="[
-          task.status=='ongoing' ? 'bg-green-500' : 'bg-gray-500'
+          setColor(task.status),
+          formatDatenoClock(task.start)==day.date ? 'rounded-s-lg' : '',
+          formatDatenoClock(task.end)==day.date ? 'rounded-e-lg' : '',
         ]"
       >
-      
       </span>
     </div>
+
   </div>
 </template>
 
@@ -27,6 +31,26 @@ defineProps({
   gridTemplate: String,
   isInRange: Function,
 });
+
+//set color
+const setColor = (status) => {
+  if (status == 'completed') {
+    return 'bg-green-500'
+  } else if (status == 'cancelled') {
+    return 'bg-red-500'
+  } else if (status == 'archived') {
+    return 'bg-amber-500'
+  } else {
+    return 'bg-gray-500'
+  }
+}
+
+//tanggal tanpa jam
+const formatDatenoClock = (date) => {
+  const tanggal = new Date(date);
+  const tanggalSaja = tanggal.toISOString().split('T')[0];
+  return tanggalSaja; 
+}
 
 // Format tanggal tanpa jam
 const formatDateJam = (date) => {
