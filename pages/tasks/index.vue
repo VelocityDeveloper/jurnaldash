@@ -8,7 +8,7 @@
       </Button>
 
       <form class="flex justify-end gap-2">
-        <DatePicker v-model="formSearch.monthYear" view="month" dateFormat="mm/yy" size="small" />
+        <DatePicker locale="id-ID" v-model="formSearch.monthYear" view="month" dateFormat="mm/yy" size="small" />
         <Select v-model="formSearch.user" :options="optionUsers" optionLabel="label" optionValue="value" placeholder="Select User" />
       </form>
 
@@ -82,19 +82,25 @@ onMounted( async () => {
   }
 })
 
-
 const { data, status, error, refresh } = await useAsyncData(
     'tasks',
     fetchTasks
 )
 
+
 function fetchTasks() {
-  return client('/api/task', {
-    params: {
-      date: formSearch.value.monthYear,
-      user_id: formSearch.value.user
-    }
-  });
+  const params = new URLSearchParams();
+
+  if(formSearch.value.monthYear){
+    const month = formSearch.value.monthYear.getMonth() + 1;
+    const year = formSearch.value.monthYear.getFullYear();
+    params.append('date',year.toString()+'-'+month.toString()+'-'+'01 00:00:00');
+  }
+
+  if(formSearch.value.user){
+    params.append('user_id', formSearch.value.user);
+  }
+  return client(`/api/task?${params.toString()}`);
 }
 
 //watch perubahan formSearch
