@@ -78,6 +78,12 @@ const items = ref([
       icon: 'lucide:list-check',
       href:'/tasks',
   },
+  {
+      key: 'users',
+      label: 'Users',
+      icon: 'lucide:users',
+      href:'/users',
+  },
 ]);
 
 //class untuk tombol menu
