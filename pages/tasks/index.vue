@@ -132,7 +132,8 @@ watch(
 );
 
 function onAdd(response: any) {
-  tasks.value = [response, ...tasks.value];
+  tasks.value = [...tasks.value, response];
+  dialog.value = false;
 }
 
 function onUpdate(response: any) {

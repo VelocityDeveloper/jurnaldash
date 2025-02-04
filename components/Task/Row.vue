@@ -12,23 +12,24 @@
                             task.priority === 'low' ? 'lucide:info' : ''" />
             </Avatar>
             <Avatar shape="circle" class="me-1" size="small" v-tooltip="`Status: ${task.status}`"
-              :style="task.status === 'completed' ? 'background-color: #4ade80' : 
-                      task.status === 'ongoing' ? 'background-color: #3b82f6' : 
-                      task.status === 'cancelled' ? 'background-color: #f87171' : 
-                      task.status === 'archived' ? 'background-color: #6b7280' : ''">
+              :style="task.status === 'completed' ? 'background-color: #4ade80; color: #fff' : 
+                      task.status === 'ongoing' ? 'background-color: #3b82f6; color: #fff' : 
+                      task.status === 'cancelled' ? 'background-color: #f87171; color: #fff' : 
+                      task.status === 'archived' ? 'background-color: #6b7280; color: #fff' : ''">
                 <Icon :name="task.status === 'completed' ? 'lucide:check-circle' : 
-                            task.status === 'ongoing' ? 'lucide:loader' : 
+                            task.status === 'ongoing' ? 'lucide:box' : 
                             task.status === 'cancelled' ? 'lucide:x-circle' : 
                             task.status === 'archived' ? 'lucide:archive' : ''" />
             </Avatar>
-            <Avatar shape="circle" class="me-1" size="small" v-tooltip="`Category: ${task.category}`">
+            <!-- jika Project badkground=#3b82f6 -->
+            <Avatar shape="circle" class="me-1" :style="task.category === 'Project' ? 'background-color: #3b82f6; color: #fff' : ''" size="small" v-tooltip="`Category: ${task.category}`">
                 {{ task.category.charAt(0) }} 
             </Avatar>
-            <Avatar shape="circle" class="me-1" size="small" @click="emits('goToEdit', task)">
+            <Avatar shape="circle" class="me-1 cursor-pointer" style="background-color: #333; color: #fff" size="small" @click="emits('goToEdit', task)" v-tooltip="'Edit Task'">
                 <Icon name="lucide:pen" mode="svg"/>
             </Avatar>
         </AvatarGroup>
-        <span @click="emits('goToDetail')">
+        <span @click="emits('goToDetail')" class="cursor-pointer">
           {{ task.title }}
         </span>
         
@@ -36,12 +37,12 @@
     </div>
 
     <div v-for="day in daysInMonth" :key="day.date" class="flex items-center z-1">
-      
       <span
         v-if="isInRange(task, day.date)"
         class="px-2 text-xs text-white w-full inline-block py-1 min-h-5 cursor-pointer"
         @click="emits('goToDetail')"
         :class="[
+          task.category === 'Project' ? 'h-7' : 'h-2',
           setColor(task.status),
           formatDatenoClock(task.start)==day.date ? 'rounded-s-lg' : '',
           formatDatenoClock(task.end)==day.date ? 'rounded-e-lg' : '',
@@ -68,7 +69,7 @@ const setColor = (status) => {
   } else if (status == 'cancelled') {
     return 'bg-red-500'
   } else if (status == 'archived') {
-    return 'bg-amber-500'
+    return 'bg-gray-500'
   } else {
     return 'bg-gray-500'
   }
