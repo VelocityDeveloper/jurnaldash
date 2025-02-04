@@ -40,6 +40,7 @@
       <span
         v-if="isInRange(task, day.date)"
         class="px-2 text-xs text-white w-full inline-block py-1 min-h-5 cursor-pointer"
+        @click="emits('goToDetail')"
         :class="[
           setColor(task.status),
           formatDatenoClock(task.start)==day.date ? 'rounded-s-lg' : '',
