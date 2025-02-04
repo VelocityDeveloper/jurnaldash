@@ -27,7 +27,7 @@
           <div v-else>
 
             <TaskRow
-              v-if="data.length > 0"
+              v-if="data &&data.length > 0"
               v-for="task in data"
               :key="task.id"
               :task="task"
@@ -55,7 +55,7 @@
     <TaskPreview v-else :item="selectedItem"/>
   </Dialog>
 
-</template>
+</template>0
 
 <script setup lang="ts">
 definePageMeta({
@@ -63,6 +63,7 @@ definePageMeta({
 });
 const client = useSanctumClient();
 const user = useSanctumUser() as any;
+const route = useRoute();
 
 const formSearch = ref({
   monthYear:  new Date(),
@@ -72,6 +73,7 @@ const formSearch = ref({
 const optionUsers = ref([] as any);
 
 onMounted( async () => {
+
   if(user.value){
     formSearch.value.user = user.value.id
   }
@@ -88,6 +90,15 @@ const { data, status, error, refresh } = await useAsyncData(
     fetchTasks
 )
 
+function loadQuery(){
+  if(route.query.user){
+    formSearch.value.user = Number(route.query.user)
+  }
+  if(route.query.monthYear){
+    const queryDate = route.query.monthYear;
+    formSearch.value.monthYear = new Date('01-'+queryDate);
+  }
+}
  const onAdd = (response: any) => {
   if (!data.value) {
     data.value = { data: [] };
@@ -106,21 +117,30 @@ const { data, status, error, refresh } = await useAsyncData(
 
 function fetchTasks() {
   const params = new URLSearchParams();
-
+  loadQuery();
   if(formSearch.value.monthYear){
     const month = formSearch.value.monthYear.getMonth() + 1;
     const year = formSearch.value.monthYear.getFullYear();
     params.append('date',year.toString()+'-'+month.toString()+'-'+'01 00:00:00');
   }
-
   if(formSearch.value.user){
     params.append('user_id', formSearch.value.user);
   }
+  
   return client(`/api/task?${params.toString()}`);
 }
 
 //watch perubahan formSearch
 watch(formSearch.value, () => {
+  const dateYear = formSearch.value.monthYear.getFullYear();
+  const dateMonth = formSearch.value.monthYear.getMonth() + 1;
+  navigateTo({
+    path: '/tasks',
+    query: {
+      monthYear: dateMonth + '-' + dateYear,
+      user: formSearch.value.user
+    },
+  });
   refresh();
 })
 
