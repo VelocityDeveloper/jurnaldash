@@ -30,7 +30,7 @@ export function useCalendar() {
   });
 
   const gridTemplate = computed(() => {
-    return `grid-template-columns: 200px repeat(${daysInMonth.value.length}, minmax(30px, auto));`;
+    return `grid-template-columns: 300px repeat(${daysInMonth.value.length}, minmax(30px, auto));`;
   });
 
   const isInRange = (task, date) => {

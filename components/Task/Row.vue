@@ -1,10 +1,32 @@
 <template>
-  <div class="grid border-gray-100 border-b" :style="gridTemplate">
-    
-    <div class="sticky p-2 start-0 top-0 z-10 bg-white border-e border-gray-200 me-2">
-      <span class="truncate block text-sm">
+  <div class="grid border-gray-100 dark:border-zinc-800 border-b" :style="gridTemplate">
+    <div class="sticky p-2 start-0 top-0 z-10 bg-white border-e border-gray-200 me-2 dark:bg-zinc-900 dark:border-zinc-800">
+      <div class="truncate text-sm flex items-center">
+        <AvatarGroup>
+            <Avatar shape="circle" class="me-1" size="small" v-tooltip="`Priority: ${task.priority}`"
+              :style="task.priority === 'high' ? 'background-color: #fbbf24' : 
+                      task.priority === 'medium' ? 'background-color: #fcd34d' : 
+                      task.priority === 'low' ? 'background-color: #d1d5db' : ''">
+              <Icon :name="task.priority === 'high' ? 'lucide:alert-triangle' : 
+                            task.priority === 'medium' ? 'lucide:alert-circle' : 
+                            task.priority === 'low' ? 'lucide:info' : ''" />
+            </Avatar>
+            <Avatar shape="circle" class="me-1" size="small" v-tooltip="`Status: ${task.status}`"
+              :style="task.status === 'completed' ? 'background-color: #4ade80' : 
+                      task.status === 'ongoing' ? 'background-color: #3b82f6' : 
+                      task.status === 'cancelled' ? 'background-color: #f87171' : 
+                      task.status === 'archived' ? 'background-color: #6b7280' : ''">
+                <Icon :name="task.status === 'completed' ? 'lucide:check-circle' : 
+                            task.status === 'ongoing' ? 'lucide:loader' : 
+                            task.status === 'cancelled' ? 'lucide:x-circle' : 
+                            task.status === 'archived' ? 'lucide:archive' : ''" />
+            </Avatar>
+            <Avatar shape="circle" class="me-1" size="small" v-tooltip="`Category: ${task.category}`">
+                {{ task.category.charAt(0) }} 
+            </Avatar>
+        </AvatarGroup>
         {{ task.title }}
-      </span>
+      </div>
     </div>
 
     <div v-for="day in daysInMonth" :key="day.date" class="flex items-center z-1">

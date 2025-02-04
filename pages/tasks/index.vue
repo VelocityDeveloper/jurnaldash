@@ -14,7 +14,7 @@
 
     </div>
 
-    <div class="border rounded-lg overflow-hidden">
+    <div class="border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
       <div class="overflow-auto max-h-[70vh]">
         <div class="min-w-max list-task">
 
@@ -35,7 +35,7 @@
               :gridTemplate="gridTemplate"
               :isInRange="isInRange"
               @click="openDialog(task,'preview')"
-              class="odd:bg-slate-100 even:bg-white relative"
+              class="odd:bg-slate-100 even:bg-white relative dark:odd:bg-zinc-800 dark:even:bg-zinc-900"
             />
 
             <div v-else class="p-2 text-center">
