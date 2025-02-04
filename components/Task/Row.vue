@@ -24,8 +24,14 @@
             <Avatar shape="circle" class="me-1" size="small" v-tooltip="`Category: ${task.category}`">
                 {{ task.category.charAt(0) }} 
             </Avatar>
+            <Avatar shape="circle" class="me-1" size="small" @click="emits('goToEdit', task)">
+                <Icon name="lucide:pen" mode="svg"/>
+            </Avatar>
         </AvatarGroup>
-        {{ task.title }}
+        <span @click="emits('goToDetail')">
+          {{ task.title }}
+        </span>
+        
       </div>
     </div>
 
@@ -53,7 +59,7 @@ defineProps({
   gridTemplate: String,
   isInRange: Function,
 });
-
+const emits = defineEmits(['goToDetail', 'goToEdit']);
 //set color
 const setColor = (status) => {
   if (status == 'completed') {

@@ -36,6 +36,8 @@
 </template>
 
 <script setup lang="ts">
+const props = defineProps(['item'])
+const emits = defineEmits(['add','update'])
 const client = useSanctumClient();
 const isLoading = ref(false)
 const toast = useToast();
@@ -52,6 +54,15 @@ const getOptionCategory = async () => {
 };
 
 onMounted(() => {
+  if(props.item) {
+    form.title = props.item.title;
+    form.description = props.item.description;
+    form.start = props.item.start;
+    form.end = props.item.end;
+    form.status = props.item.status;
+    form.category = props.item.category;
+    form.priority = props.item.priority;
+  }
   getOptionCategory();
 });
 
@@ -79,26 +90,52 @@ const form = reactive({
 
 const handleFormSubmit = async () => {
   isLoading.value = true;
-  try {
-    const response = await client(`/api/task`, {
-      method: 'POST',
-      body: form
-    });
-    toast.add({
-      severity: 'success',
-      summary: 'Berhasil!',
-      detail: 'Data task berhasil ditambah',
-      life: 3000
-    });
-  } catch (error) {
-    console.error(error);
-    toast.add({
-      severity: 'error',
-      summary: 'Gagal!',
-      detail: 'Terjadi kesalahan saat mengupdate data',
-      life: 3000
-    });
+  if(props.item) {
+    try {
+      const responseUpdate = await client(`/api/task/${props.item.id}`, {
+        method: 'PUT',
+        body: form
+      });
+      emits('update', responseUpdate);
+      toast.add({
+        severity: 'success',
+        summary: 'Berhasil!',
+        detail: 'Data task berhasil diupdate',
+        life: 3000
+      });
+    } catch (error) {
+      console.error(error);
+      toast.add({
+        severity: 'error',
+        summary: 'Gagal!',
+        detail: 'Terjadi kesalahan saat mengupdate data',
+        life: 3000
+      });
+    }
+  } else {
+    try {
+      const responseAdd = await client(`/api/task`, {
+        method: 'POST',
+        body: form
+      });
+      emits('add', responseAdd);
+      toast.add({
+        severity: 'success',
+        summary: 'Berhasil!',
+        detail: 'Data task berhasil ditambah',
+        life: 3000
+      });
+    } catch (error) {
+      console.error(error);
+      toast.add({
+        severity: 'error',
+        summary: 'Gagal!',
+        detail: 'Terjadi kesalahan saat mengupdate data',
+        life: 3000
+      });
+    }
   }
+
   isLoading.value = false;
 };
 </script>

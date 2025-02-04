@@ -34,7 +34,8 @@
               :daysInMonth="daysInMonth"
               :gridTemplate="gridTemplate"
               :isInRange="isInRange"
-              @click="openDialog(task,'preview')"
+              @goToDetail="openDialog(task,'preview')"
+              @goToEdit="openDialog(task,'add')"
               class="odd:bg-slate-100 even:bg-white relative dark:odd:bg-zinc-800 dark:even:bg-zinc-900"
             />
 
@@ -50,7 +51,7 @@
   </div>
   
   <Dialog v-model:visible="dialog" :header="selectedItem ? 'Preview Task' : 'Tambah Task'" :style="{ width: '30rem', minHeight: '50vh' }" :breakpoints="{ '1000px': '40rem', '768px': '90vw' }" :modal="true">
-    <TaskFormAdd v-if="dialogAction == 'add'" />
+    <TaskFormAdd v-if="dialogAction == 'add' " :item="selectedItem" @add="onAdd" @update="onUpdate" />
     <TaskPreview v-else :item="selectedItem"/>
   </Dialog>
 
@@ -87,6 +88,21 @@ const { data, status, error, refresh } = await useAsyncData(
     fetchTasks
 )
 
+ const onAdd = (response: any) => {
+  if (!data.value) {
+    data.value = { data: [] };
+  }
+  data.value.data.unshift(response);
+ }
+
+ const onUpdate = (response: any) => {
+  if (!data.value || !Array.isArray(data.value.data)) {
+    data.value = { data: [] };
+  }
+  data.value.data = data.value.data.map((item: any) => {
+    return item.id === response.id ? response : item;
+  });
+};
 
 function fetchTasks() {
   const params = new URLSearchParams();
