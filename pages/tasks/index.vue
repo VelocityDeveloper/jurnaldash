@@ -56,7 +56,7 @@
   :modal="true"
   :style="{ width: '40rem', minHeight: '50vh' }"
   >
-    <TaskFormAdd v-if="dialogAction === 'add'" :item="selectedItem" @add="onAdd" @update="onUpdate" />
+    <TaskFormAdd v-if="dialogAction === 'add'" :item="selectedItem" @add="onAdd" @update="onUpdate" @delete="onDelete" />
     <TaskPreview v-else :item="selectedItem" />
   </Dialog>
 </template>
@@ -140,6 +140,11 @@ function onUpdate(response: any) {
   tasks.value = tasks.value.map(task =>
     task.id === response.id ? response : task
   );
+}
+
+function onDelete(id: number) {
+  dialog.value = false;
+  tasks.value = tasks.value.filter(task => task.id !== id);
 }
 
 function openDialog(data: any, action: 'add' | 'preview') {

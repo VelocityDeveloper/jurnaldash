@@ -4,5 +4,4 @@
     <NuxtPage />
   </NuxtLayout>
   <Toast />
-  <ConfirmDialog></ConfirmDialog>
 </template>

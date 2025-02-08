@@ -23,24 +23,32 @@
 
     <div class="flex justify-end mt-4">
       <Button type="submit" label="Simpan" :loading="isLoading">          
-          <span v-if="isLoading" class="flex items-center gap-1">
-            <Icon name="lucide:loader-circle" class="animate-spin" mode="svg"/> Memproses..
-          </span>
-          <span v-else class="flex items-center gap-1">
-            <Icon name="lucide:save" mode="svg"/> Simpan
-          </span> 
-        </Button>
+        <span v-if="isLoading" class="flex items-center gap-1">
+          <Icon name="lucide:loader-circle" class="animate-spin" mode="svg"/> Memproses..
+        </span>
+        <span v-else class="flex items-center gap-1">
+          <Icon name="lucide:save" mode="svg"/> Simpan
+        </span> 
+      </Button>
+      <Button v-if="isLoadingDelete" class="flex items-center" severity="danger" size="small" >
+        <Icon name="lucide:loader-2" class="animate-spin" />
+      </Button>
+      <Button v-else class="flex items-center" severity="danger" size="small" @click="deleteData(props.item.id)">
+        <Icon name="lucide:trash" />
+      </Button>
     </div>
-
+    <ConfirmPopup/>
   </form>
 </template>
 
 <script setup lang="ts">
 const props = defineProps(['item'])
-const emits = defineEmits(['add','update'])
-const client = useSanctumClient();
+const emits = defineEmits(['add','update','delete'])
+const client = useSanctumClient()
 const isLoading = ref(false)
-const toast = useToast();
+const isLoadingDelete = ref(false)
+const toast = useToast()
+const confirm = useConfirm()
 
 //dapatkan option category
 const categorys = ref([]);
@@ -52,6 +60,31 @@ const getOptionCategory = async () => {
     console.error(error);
   }
 };
+
+const deleteData = async (id: number) => {
+  confirm.require({
+    message: 'Apakah Anda yakin ingin menghapus data ini?',
+    header: 'Konfirmasi',
+    icon: 'lucide:alert-triangle',
+    rejectProps: {
+      label: 'Batal',
+      severity: 'secondary',
+      outlined: true
+    },
+    acceptProps: {
+      label: 'Hapus'
+    },
+    accept: async () => {
+      isLoadingDelete.value = true;
+      const response = await client(`/api/task/${id}`, {
+        method: 'DELETE',
+      });
+      isLoadingDelete.value = false;
+      emits('delete', response);
+      toast.add({ severity: 'success', summary: 'Sukses', detail: 'Konsumen berhasil dihapus!', life: 3000 });
+    },
+  });
+}
 
 onMounted(() => {
   if(props.item) {

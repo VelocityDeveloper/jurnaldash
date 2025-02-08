@@ -38,7 +38,7 @@
   <Dialog v-model:visible="dialog" :header="selectedItem ? 'Edit User' : 'Tambah User'" :style="{ width: '40rem', minHeight: '50vh' }" :breakpoints="{ '1000px': '40rem', '768px': '90vw' }" :modal="true">
       <UserForm :data="selectedItem" :action="dialogAction" @close="dialog = false" @update="refresh"/>
   </Dialog>
-
+  <ConfirmDialog/>
 </template>
 
 <script setup lang="ts">
