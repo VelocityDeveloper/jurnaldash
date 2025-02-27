@@ -9,7 +9,8 @@
     "dev:local": "nuxt dev --port 3004",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "prod": "nuxt generate --dotenv .env.production"
   },
   "dependencies": {
     "@nuxt/icon": "^1.10.3",

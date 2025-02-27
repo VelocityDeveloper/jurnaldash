@@ -66,12 +66,12 @@ const isChild = (key : any) => {
 
 //daftar menu
 const items = ref([
-  {
-      key: 'dashboard',
-      label: 'Dashboard',
-      icon: 'lucide:layout-grid',
-      href:'/',
-  },
+//   {
+//       key: 'dashboard',
+//       label: 'Dashboard',
+//       icon: 'lucide:layout-grid',
+//       href:'/',
+//   },
   {
       key: 'tasks',
       label: 'Tasks',
