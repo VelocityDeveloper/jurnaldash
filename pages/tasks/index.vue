@@ -41,9 +41,11 @@
               @goToEdit="openDialog(task, 'add')" 
               class="odd:bg-slate-100 even:bg-white relative dark:odd:bg-zinc-800 dark:even:bg-zinc-900" 
             />
-            <div v-if="!tasks.length" class="p-2 text-center">
+
+            <div v-if="tasks && !tasks.length" class="p-2 text-center">
               <div class="text-sm opacity-50">Tidak ada data</div>
             </div>
+
           </div>
         </div>
       </div>
@@ -63,14 +65,21 @@
 
 <script setup lang="ts">
 const client = useSanctumClient();
-const user = useSanctumUser();
 const route = useRoute();
 const router = useRouter();
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+const user = useSanctumUser() as Ref<User | null>;
 
 const formSearch = ref({
   monthYear: new Date(),
   user: user.value?.id || null,
 });
+
 const optionUsers = ref([]);
 const dialog = ref(false);
 const dialogAction = ref<'add' | 'preview'>('add');
@@ -94,13 +103,19 @@ function loadQuery() {
   if (route.query.user) {
     formSearch.value.user = Number(route.query.user);
   }
-  if (route.query.monthYear) {
+  if (route.query.monthYear && typeof route.query.monthYear === 'string') {
     const [month, year] = route.query.monthYear.split('-');
     formSearch.value.monthYear = new Date(Number(year), Number(month) - 1);
   }
 }
 
-const { data: tasks, status, refresh } = useAsyncData('tasks', fetchTasks);
+interface Task {
+  id: number;
+  name: string;
+  status: string;
+}
+
+const { data: tasks, status, refresh } = useAsyncData<Task[]>('tasks', fetchTasks);
 
 async function fetchTasks() {
   const params = new URLSearchParams();
@@ -132,23 +147,28 @@ watch(
 );
 
 function onAdd(response: any) {
-  tasks.value = [...tasks.value, response];
-  dialog.value = false;
+  if (tasks.value) {
+    tasks.value = [...tasks.value, response];
+    dialog.value = false;
+  }
 }
 
 function onUpdate(response: any) {
-  tasks.value = tasks.value.map(task =>
-    task.id === response.id ? response : task
-  );
+  if (tasks.value) {
+    tasks.value = tasks.value.map(task =>
+      task.id === response.id ? response : task
+    );
+  }
 }
 
-function onDelete(id: number) {
-  dialog.value = false;
-  tasks.value = tasks.value.filter(task => task.id !== id);
+function onDelete(id: any) {
+  if (tasks.value) {
+    dialog.value = false;
+    tasks.value = tasks.value.filter(task => task.id !== id);
+  }
 }
 
 function openDialog(data: any, action: 'add' | 'preview') {
-  console.log(action);
   dialog.value = true;
   selectedItem.value = data;
   dialogAction.value = action;
