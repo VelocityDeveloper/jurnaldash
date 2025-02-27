@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div class="flex justify-end md:justify-between gap-2 mb-2">
       <Button size="small" @click="openDialog(null, 'add')" severity="info">
         <Icon name="lucide:plus" /> Tambah
@@ -20,6 +21,16 @@
           placeholder="Pilih Pengguna" 
         />
       </form>
+    </div>
+
+    
+    <div class="mt-4 mb-3 overflow-x-auto"> 
+      <div class="flex flex-row gap-2">    
+        <div v-for="item in summaryArray" :key="item.category" class="border rounded p-3 text-nowrap min-w-[8em]" :class="[item.category === 'Project' ? 'bg-sky-100 dark:bg-sky-900' : item.category === 'Pengembangan' ? 'bg-amber-100 dark:bg-amber-900' : 'bg-zinc-100 dark:bg-zinc-900']">
+          <div class="text-sm opacity-50">{{ item.category }}</div>
+          <div class="text-lg font-bold">{{ item.count }}</div>
+        </div>
+      </div> 
     </div>
 
     <div class="border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
@@ -64,6 +75,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+    title: "Tasks",
+});
 const client = useSanctumClient();
 const route = useRoute();
 const router = useRouter();
@@ -113,6 +127,7 @@ interface Task {
   id: number;
   name: string;
   status: string;
+  category: string;
 }
 
 const { data: tasks, status, refresh } = useAsyncData<Task[]>('tasks', fetchTasks);
@@ -175,4 +190,37 @@ function openDialog(data: any, action: 'add' | 'preview') {
 }
 
 const { daysInMonth, gridTemplate, isInRange } = useCalendar();
+
+// Reactive state untuk menyimpan rangkuman
+const summary = ref<Record<string, number>>({});
+
+// Fungsi untuk membuat rangkuman berdasarkan kategori
+function summarizeByCategory(tasks: Task[] | null): Record<string, number> {
+  if (!tasks) return {};
+
+  return tasks.reduce((summary, task) => {
+    const category = task.category || 'uncategorized'; // Handle jika category tidak ada
+    summary[category] = (summary[category] || 0) + 1;
+    return summary;
+  }, {} as Record<string, number>);
+}
+
+// Watch untuk memperbarui summary ketika tasks.value berubah
+watch(
+  () => tasks.value,
+  (newTasks) => {
+    if (newTasks) {
+      summary.value = summarizeByCategory(newTasks);
+    }
+  },
+  { immediate: true } // Jalankan segera setelah komponen diinisialisasi
+);
+
+const summaryArray = computed(() => {
+  return Object.entries(summary.value).map(([category, count]) => ({
+    category,
+    count,
+  }));
+});
+
 </script>
