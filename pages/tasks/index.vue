@@ -36,7 +36,7 @@
     <div class="border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
       <div class="overflow-auto max-h-[70vh]">
         <div class="min-w-max list-task">
-          <CalendarHeader :daysInMonth="daysInMonth" :gridTemplate="gridTemplate" />
+          <CalendarHeader :daysInMonth="theDays" :gridTemplate="gridTemplate" />
           <div v-if="status === 'pending'">
             <Skeleton v-for="i in 15" :key="i" width="100%" height="2rem" class="mb-2 mx-1" />
           </div>
@@ -45,7 +45,7 @@
               v-for="task in tasks" 
               :key="task.id" 
               :task="task" 
-              :daysInMonth="daysInMonth" 
+              :daysInMonth="theDays" 
               :gridTemplate="gridTemplate" 
               :isInRange="isInRange" 
               @goToDetail="openDialog(task, 'preview')" 
@@ -189,7 +189,16 @@ function openDialog(data: any, action: 'add' | 'preview') {
   dialogAction.value = action;
 }
 
-const { daysInMonth, gridTemplate, isInRange } = useCalendar();
+const { getDaysInMonth, isInRange } = useCalendar();
+const gridTemplate = computed(() => `grid-template-columns: 250px repeat(${theDays.value.length}, minmax(30px, auto));`);
+
+const theDays = ref([] as any);
+onMounted(() => {
+  theDays.value = getDaysInMonth(
+    formSearch.value.monthYear.getFullYear(),
+    formSearch.value.monthYear.getMonth()
+  )
+})
 
 // Reactive state untuk menyimpan rangkuman
 const summary = ref<Record<string, number>>({});
@@ -211,6 +220,10 @@ watch(
   (newTasks) => {
     if (newTasks) {
       summary.value = summarizeByCategory(newTasks);
+      theDays.value = getDaysInMonth(
+        formSearch.value.monthYear.getFullYear(),
+        formSearch.value.monthYear.getMonth()
+      )
     }
   },
   { immediate: true } // Jalankan segera setelah komponen diinisialisasi

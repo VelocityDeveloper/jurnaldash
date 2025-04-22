@@ -14,6 +14,15 @@ export function useCalendar() {
     });
   };
 
+  const setdaysInMonth = (year, month) => {
+    if (year && month) {
+      return getDaysInMonth(year, month);
+    } else {
+      const now = new Date();
+      return getDaysInMonth(now.getFullYear(), now.getMonth());
+    }
+  };
+
   // Fungsi untuk memformat tanggal lokal tanpa timezone
   const formatDateLocal = (date) => {
     const year = date.getFullYear();
@@ -24,13 +33,13 @@ export function useCalendar() {
 
   const daysInMonth = computed(() => {
     const now = new Date();
-    const getDaysInMonthJJJ = getDaysInMonth(now.getFullYear(), now.getMonth());
+    const getDaysInMonthJJJ = setdaysInMonth;
     // console.log(getDaysInMonthJJJ);
     return getDaysInMonthJJJ;
   });
 
   const gridTemplate = computed(() => {
-    return `grid-template-columns: 300px repeat(${daysInMonth.value.length}, minmax(30px, auto));`;
+    return `grid-template-columns: 250px repeat(${daysInMonth.value.length}, minmax(30px, auto));`;
   });
 
   const isInRange = (task, date) => {
@@ -47,6 +56,8 @@ export function useCalendar() {
   };
 
   return {
+    setdaysInMonth,
+    getDaysInMonth,
     daysInMonth,
     gridTemplate,
     isInRange,
