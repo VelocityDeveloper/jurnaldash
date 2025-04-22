@@ -22,13 +22,17 @@
         />
       </form>
     </div>
-
     
     <div class="mt-4 mb-3 overflow-x-auto"> 
       <div class="flex flex-row gap-2">    
-        <div v-for="item in summaryArray" :key="item.category" class="border rounded p-3 text-nowrap min-w-[8em]" :class="[item.category === 'Project' ? 'bg-sky-100 dark:bg-sky-900' : item.category === 'Pengembangan' ? 'bg-amber-100 dark:bg-amber-900' : 'bg-zinc-100 dark:bg-zinc-900']">
+        <div @click="selectCategory('')" class="cursor-pointer relative border rounded p-3 text-nowrap min-w-[8em] bg-teal-100 dark:bg-teal-900 dark:border-zinc-600">
+          <div class="text-sm opacity-50">Semua</div>
+          <div class="text-lg font-bold">{{ summarySum }}</div>
+        </div>
+        <div v-for="item in summaryArray" :key="item.category" @click="selectCategory(item.category)" class="cursor-pointer relative border dark:border-zinc-600 rounded p-3 text-nowrap min-w-[8em]" :class="[item.category === 'Project' ? 'bg-sky-100 dark:bg-sky-900' : item.category === 'Pengembangan' ? 'bg-amber-100 dark:bg-amber-900' : 'bg-zinc-100 dark:bg-zinc-900']">
           <div class="text-sm opacity-50">{{ item.category }}</div>
           <div class="text-lg font-bold">{{ item.count }}</div>
+          <span v-if="item.category === selectedCategory" class="w-3 h-3 rounded-full bg-sky-400 dark:bg-sky-800 absolute top-1 right-1"></span>
         </div>
       </div> 
     </div>
@@ -41,6 +45,7 @@
             <Skeleton v-for="i in 15" :key="i" width="100%" height="2rem" class="mb-2 mx-1" />
           </div>
           <div v-else>
+
             <TaskRow 
               v-for="task in tasks" 
               :key="task.id" 
@@ -48,6 +53,7 @@
               :daysInMonth="theDays" 
               :gridTemplate="gridTemplate" 
               :isInRange="isInRange" 
+              :selectedCategory="selectedCategory"
               @goToDetail="openDialog(task, 'preview')" 
               @goToEdit="openDialog(task, 'add')" 
               class="odd:bg-slate-100 even:bg-white relative dark:odd:bg-zinc-800 dark:even:bg-zinc-900" 
@@ -200,6 +206,11 @@ onMounted(() => {
   )
 })
 
+const selectedCategory = ref('');
+const selectCategory = (category: string) => {
+  selectedCategory.value = category;
+}
+
 // Reactive state untuk menyimpan rangkuman
 const summary = ref<Record<string, number>>({});
 
@@ -224,6 +235,7 @@ watch(
         formSearch.value.monthYear.getFullYear(),
         formSearch.value.monthYear.getMonth()
       )
+      selectedCategory.value = '';
     }
   },
   { immediate: true } // Jalankan segera setelah komponen diinisialisasi
@@ -235,5 +247,9 @@ const summaryArray = computed(() => {
     count,
   }));
 });
+const summarySum = computed(() => {
+  return summaryArray.value.reduce((total, item) => total + item.count, 0);
+});
+
 
 </script>

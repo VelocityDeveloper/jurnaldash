@@ -1,5 +1,5 @@
 <template>
-  <div class="grid border-gray-100 dark:border-zinc-800 border-b" :style="gridTemplate">
+  <div class="grid border-gray-100 dark:border-zinc-800 border-b" :class="!selectedCategory || task.category === selectedCategory ? 'block' : 'hidden'" :style="gridTemplate">
     <div class="sticky p-2 start-0 top-0 z-10 bg-white border-e border-gray-200 me-2 dark:bg-zinc-900 dark:border-zinc-800">
       <div class="truncate text-sm flex items-center">
         <AvatarGroup>
@@ -49,6 +49,7 @@
         ]"
       >
       </span>
+
     </div>
 
   </div>
@@ -60,6 +61,7 @@ defineProps({
   daysInMonth: Array,
   gridTemplate: String,
   isInRange: Function,
+  selectedCategory: String
 });
 const emits = defineEmits(['goToDetail', 'goToEdit']);
 //set color

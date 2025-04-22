@@ -22,6 +22,12 @@
     </div>
 
     <div class="flex justify-end gap-1 mt-4">
+      <Button v-if="isLoadingDelete" class="flex items-center" severity="danger" size="small" >
+        <Icon name="lucide:loader-2" class="animate-spin" />
+      </Button>
+      <Button v-else class="flex items-center" severity="danger" size="small" @click="deleteData(props.item.id)">
+        <Icon name="lucide:trash" /> Hapus
+      </Button>
       <Button type="submit" label="Simpan" :loading="isLoading">          
         <span v-if="isLoading" class="flex items-center gap-1">
           <Icon name="lucide:loader-circle" class="animate-spin" mode="svg"/> Memproses..
@@ -29,12 +35,6 @@
         <span v-else class="flex items-center gap-1">
           <Icon name="lucide:save" mode="svg"/> Simpan
         </span> 
-      </Button>
-      <Button v-if="isLoadingDelete" class="flex items-center" severity="danger" size="small" >
-        <Icon name="lucide:loader-2" class="animate-spin" />
-      </Button>
-      <Button v-else class="flex items-center" severity="danger" size="small" @click="deleteData(props.item.id)">
-        <Icon name="lucide:trash" /> Hapus
       </Button>
     </div>
     <ConfirmPopup/>
@@ -81,7 +81,7 @@ const deleteData = async (id: number) => {
       });
       isLoadingDelete.value = false;
       emits('delete', props.item.id);
-      toast.add({ severity: 'success', summary: 'Sukses', detail: 'Konsumen berhasil dihapus!', life: 3000 });
+      toast.add({ severity: 'success', summary: 'Sukses', detail: 'Task berhasil dihapus!', life: 3000 });
     },
   });
 }
