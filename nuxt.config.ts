@@ -1,54 +1,10 @@
-import Aura from '@primevue/themes/aura';
-import { definePreset } from '@primevue/themes';
-const MyPreset = definePreset(Aura, {
-  semantic: {
-    primary: {
-        50: '{zinc.50}',
-        100: '{zinc.100}',
-        200: '{zinc.200}',
-        300: '{zinc.300}',
-        400: '{zinc.400}',
-        500: '{zinc.500}',
-        600: '{zinc.600}',
-        700: '{zinc.700}',
-        800: '{zinc.800}',
-        900: '{zinc.900}',
-        950: '{zinc.950}'
-    },
-    colorScheme: {
-        light: {
-            primary: {
-                color: '{zinc.950}',
-                inverseColor: '#ffffff',
-                hoverColor: '{zinc.900}',
-                activeColor: '{zinc.800}'
-            }
-        },
-        dark: {
-            primary: {
-                color: '{zinc.50}',
-                inverseColor: '{zinc.950}',
-                hoverColor: '{zinc.100}',
-                activeColor: '{zinc.200}'
-            },
-        }
-    }
-  }
-});
+import Aura from '@primeuix/themes/aura';
 
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr: false,
-  primevue: {
-    autoImport: true,
-    options: {
-      theme: {
-        preset: MyPreset,
-        options: {
-          darkModeSelector: '.dark',
-        }
-      },
-    }
-  },
+  compatibilityDate: '2024-11-01',
+  devtools: { enabled: true },
+  ssr: false,  
   sanctum: {
     mode: 'cookie',
     baseUrl: process.env.API_URL,
@@ -66,13 +22,29 @@ export default defineNuxtConfig({
     },
     logLevel: 1,
   },
-  compatibilityDate: '2024-11-01',
-  devtools: { enabled: true },
+  primevue: {
+    autoImport: true,
+    options: {
+        theme: {
+            preset: Aura,
+            options: {
+              darkModeSelector: '.dark',
+            }
+        }
+    }
+  }, 
+  tailwindcss: {   
+    config: { 
+      darkMode: 'class',
+    },
+  },
   modules: [
-    '@primevue/nuxt-module',
+    '@nuxtjs/tailwindcss',
     'nuxt-auth-sanctum',
+    '@primevue/nuxt-module',
     '@nuxt/icon',
     '@pinia/nuxt',
-    '@nuxtjs/tailwindcss',
-  ],
+    'dayjs-nuxt',
+    '@nuxt/fonts'
+  ]
 })

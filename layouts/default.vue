@@ -1,126 +1,69 @@
-<template>  
-  <div class="flex justify-end min-h-svh w-full bg-gray-100 dark:bg-zinc-900">
+<template>
 
-    <div>
-      <aside class="flex z-20 fixed top-0 md:top-4 left-[-100%] md:left-4 h-full md:h-[calc(-2.1rem+100vh)] w-[calc(100%-5rem)] md:w-[13.5rem]" :class="{'!left-0 md:!left-4':isOpen}">
-        <div class="flex flex-col w-full h-full space-y-6 transition-all bg-white dark:bg-zinc-800 md:rounded-lg shadow-sm">
-          <SidebarApp />
+  <div class="flex w-full min-h-screen">
+
+    <div class="page-wrapper flex w-full transition duration-300 ease-in-out" :class="{'md:ps-[5rem]': useConfig.miniSidebar,'md:ps-[14rem]': !useConfig.miniSidebar }">
+      <div class="xl:block" :class="{ 'block z-[7]': useConfig.openSidebar, 'hidden md:block': !useConfig.openSidebar }">
+        <div class="flex">
+          <DashSidebar :toggleMini="minim"/>
         </div>
-      </aside>
-      <div v-if="isOpen" @click="toggleSidebar" class="md:hidden z-10 fixed min-h-screen w-full right-0 top-0 bg-gray-900 opacity-50"></div>
-    </div>
+      </div>
+      <div class="body-wrapper w-full bg-white dark:bg-zinc-900">
+        <DashHeader @toggleMini="toggleMini"/>
+        <div class="container mx-auto p-6">
 
-    <main class="flex-1 p-2 py-4 md:p-4 md:pl-4 transition-all w-full md:max-w-[calc(100%-14.5rem)]">
-
-      <header class="rounded-lg shadow-sm bg-white dark:bg-zinc-800 flex items-center justify-between p-4 md:px-6 space-x-4">
-          <div>
-            <div class="text-xl font-bold">
-              {{ $route.meta.title }}
-            </div>            
+          <div v-if="$route.meta.title" class="bg-emerald-50 dark:bg-zinc-800 p-3 md:p-5 rounded-lg mb-3 md:mb-5">
+            <h1 class="text-lg md:text-2xl font-medium text-zinc-700 dark:text-emerald-400 capitalize">
+                {{ $route.meta.title }}
+            </h1>
+            <div v-if="$route.meta.description" class="text-sm text-zinc-400">
+              {{ $route.meta.description }}
+            </div>
           </div>
-          <div class="flex justify-end">
 
-            <Button variant="text" size="small" @click="toggleNotif">
-              <Icon name="lucide:bell"/>
-            </Button>
-            <Popover ref="opNotif">
-              <div class="w-[10rem] max-h-40 overflow-y-auto">
-                  <ul class="text-sm">
-                      <li v-for="notif in notifs" class="border-b py-1">
-                        {{ notif.message }}
-                        <br><span class="text-xs opacity-50">{{ notif.time }}</span>
-                      </li>
-                  </ul>
-              </div>
-            </Popover>
+          <slot />
 
-            <Button variant="text" size="small" @click="toggleMenuUser">
-              <Icon name="lucide:user" class="md:mr-1"/>
-              <span class="hidden md:inline">
-                {{ user?.name }}
-              </span>
-            </Button>
-            <Menu ref="menuUser" :model="itemsmenuUser" :popup="true" />
-
-            <Button variant="text" @click="toggleSidebar" class="md:!hidden">
-              <Icon name="lucide:menu"/>
-            </Button>
-            <Darkmode />
-          </div>
-      </header>
-
-      <div class="flex-1 mt-4 md:p-6 p-4 rounded-lg shadow-sm bg-white dark:bg-zinc-800 min-h-[82vh]">
-        <slot />
+        </div>
       </div>
 
-    </main>
+      <div 
+      @click="useConfig.openSidebar = false" 
+      class="fixed top-0 end-0 start-0 bottom-0 bg-black opacity-50 z-[6] md:hidden" 
+      :class="{ 'hidden': !useConfig.openSidebar }"></div>
+
+    </div>
 
   </div>
-
-  <Dialog v-model:visible="dialog" header="Profil Akun" :style="{ width: '40rem', minHeight: '50vh' }" :breakpoints="{ '1000px': '40rem', '768px': '90vw' }" :modal="true">
-    <UserEdit />
-  </Dialog>
 
 </template>
 
 <script setup lang="ts">
-  interface User {
-    name: string;
-  }
-  const { user, logout } = useSanctumAuth() as { user: Ref<User | null>, logout: () => void };
-    
-  const isOpen = ref(false)
-  const toggleSidebar = () => {
-    isOpen.value = !isOpen.value
+  const useConfig = useConfigStore()
+
+  const minim = ref(false)
+  function toggleMini() {
+    minim.value = !minim.value
   }
 
-  const menuUser = ref();
-  const itemsmenuUser = ref([
+  const route = useRoute();
+  const pageTitle = computed(() => route.meta.title?route.meta.title+' | '+useConfig.config.app_name : useConfig.config.app_name);
+  const pageDescription = computed(() =>(typeof route.meta.description === 'string') ? route.meta.description : useConfig.config.app_description);
+  const appFavicon = computed(() => useConfig.config.app_favicon || '');
+
+  useHead({
+    title: pageTitle,
+    meta: [
       {
-          label: user.value?.name,
-          items: [
-              {
-                  label: 'Profil',
-                  command: () => {
-                      dialog.value = true;
-                  }
-              },
-              {
-                  label: 'Logout',
-                  command: () => {
-                      logout();
-                  }
-              }
-          ]
+        name: 'description',
+        content: pageDescription
       }
-  ]);
-  const toggleMenuUser = (event: any) => {
-      menuUser.value.toggle(event);
-  };
-  
-  const opNotif = ref();  
-  const notifs = ref();
-  const toggleNotif = (event: any) => {
-    opNotif.value.toggle(event);
-    notifs.value = [
+    ],
+    link: [
       {
-        message: 'Transaksi baru, Pulsa XL Rp. 10.000',
-        time:'2025-01-01',
-      },
-      {
-        message: 'Transaksi baru, Pulsa 3 Rp. 50.000',
-        time:'2025-01-02',
-      },
-      {
-        message: 'Transaksi baru, Topup Mobile Legends Rp. 100.000',
-        time:'2025-01-03',
-      },
-      {
-        message: 'Transaksi baru, Topup FreeFire Rp. 50.000',
-        time:'2025-01-05',
-      },
-    ];
-}
-
-const dialog = ref(false);
+        rel: 'icon',
+        type: 'image/png',
+        href: appFavicon
+      }
+    ]
+  });
 </script>

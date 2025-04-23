@@ -1,6 +1,5 @@
 {
   "name": "nuxt-app",
-  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,19 +12,24 @@
     "prod": "nuxt generate --dotenv .env.production"
   },
   "dependencies": {
-    "@nuxt/icon": "^1.10.3",
-    "@nuxtjs/tailwindcss": "^6.12.2",
-    "@pinia/nuxt": "^0.9.0",
-    "@primevue/themes": "^4.2.5",
-    "chart.js": "^4.4.7",
-    "nuxt": "^3.15.1",
-    "nuxt-auth-sanctum": "^0.5.4",
-    "pinia": "^2.3.0",
-    "primevue": "^4.2.5",
-    "vue": "latest",
-    "vue-router": "latest"
+    "@nuxt/fonts": "^0.11.1",
+    "@nuxt/icon": "^1.11.0",
+    "@nuxtjs/tailwindcss": "6.13.2",
+    "@pinia/nuxt": "^0.10.1",
+    "@primeuix/themes": "^1.0.1",
+    "@primevue/forms": "^4.3.3",
+    "@primevue/nuxt-module": "^4.3.3",
+    "chart.js": "^4.4.8",
+    "dayjs-nuxt": "^2.1.11",
+    "nuxt": "^3.16.2",
+    "nuxt-auth-sanctum": "0.6.3",
+    "pinia": "^3.0.1",
+    "primevue": "^4.3.3",
+    "quill": "^2.0.3",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@primevue/nuxt-module": "^4.2.5"
+    "@types/node": "^22.14.0"
   }
 }
