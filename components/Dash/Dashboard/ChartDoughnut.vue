@@ -16,6 +16,15 @@
 </template>
 
 <script setup lang="ts">
+const client = useSanctumClient();
+const { data, status, error, refresh } = await useAsyncData(
+    'dashboard-hariini',
+    async () => {
+      await new Promise(resolve => setTimeout(resolve, 2000)); // delay 2 detik
+      return client('/api/dashboard/hariini')
+    }
+)
+
 onMounted(() => {
     chartData.value = setChartData();
     chartOptions.value = setChartOptions();
@@ -27,12 +36,10 @@ const setChartData = () => {
     const documentStyle = getComputedStyle(document.body);
 
     return {
-        labels: ['A', 'B', 'C'],
+        labels: data.value?.labels,
         datasets: [
             {
-                data: [540, 325, 702],
-                backgroundColor: [documentStyle.getPropertyValue('--primary'), documentStyle.getPropertyValue('--p-sky-500'), documentStyle.getPropertyValue('--p-gray-500')],
-                hoverBackgroundColor: [documentStyle.getPropertyValue('--p-emerald-400'), documentStyle.getPropertyValue('--p-sky-400'), documentStyle.getPropertyValue('--p-gray-400')]
+                data: data.value?.data              
             }
         ]
     };

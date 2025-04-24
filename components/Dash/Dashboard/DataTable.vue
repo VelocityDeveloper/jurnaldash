@@ -43,8 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import { PostPreview } from '#components';
-
 const client = useSanctumClient();
 const { data, status, error, refresh } = await useAsyncData(
     'dashboard-datatable',

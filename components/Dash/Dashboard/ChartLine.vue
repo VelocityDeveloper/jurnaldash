@@ -4,7 +4,7 @@
     <template #content>
 
       <div>
-        <div class="text-sm dark:text-zinc-400">Bulan ini</div>
+        <div class="text-sm dark:text-zinc-400">30 hari terakhir</div>
       </div>
       <div>
         <Chart type="line" :data="chartData" :options="chartOptions" class="h-[100px]" />
@@ -16,6 +16,12 @@
 </template>
 
 <script setup lang="ts">
+const client = useSanctumClient();
+const { data, status, error, refresh } = await useAsyncData(
+    'dashboard-count30hari',
+    () => client('/api/dashboard/count30hari')
+)
+
 onMounted(() => {
     chartData.value = setChartData();
     chartOptions.value = setChartOptions();
@@ -28,21 +34,13 @@ const setChartData = () => {
     const documentStyle = getComputedStyle(document.documentElement);
 
     return {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: data.value?.labels,
         datasets: [
             {
-                label: 'My First dataset',
+                label: 'Total Task',
                 backgroundColor: documentStyle.getPropertyValue('--primary'),
                 borderColor: documentStyle.getPropertyValue('--primary'),
-                data: [25, 59, 40, 81, 56, 80, 90],
-                pointRadius: 0,
-                tension: 0.4
-            },
-            {
-                label: 'My Second dataset',
-                backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
-                borderColor: documentStyle.getPropertyValue('--p-gray-500'),
-                data: [28, 48, 40, 19, 86, 27, 30],
+                data: data.value?.data,
                 pointRadius: 0,
                 tension: 0.4
             }

@@ -25,12 +25,16 @@
           </div>
           <div class="flex items-center gap-6">
             <div class="border-r border-gray-200 pr-6">
-              <div class="text-2xl md:text-3xl text-zinc-900 dark:text-white">2,340</div>
-              <div class="text-sm dark:text-zinc-400">Total Penjualan</div>
+              <div class="text-2xl md:text-3xl text-zinc-900 dark:text-white">
+                {{ data.total_task }}
+              </div>
+              <div class="text-sm dark:text-zinc-400">Total Task Bulan ini</div>
             </div>
             <div>
-              <div class="text-2xl md:text-3xl text-zinc-900 dark:text-white">57%</div>
-              <div class="text-sm dark:text-zinc-400">Kenaikan Performa</div>
+              <div class="text-2xl md:text-3xl text-zinc-900 dark:text-white">
+                {{ data.percentage_increase }} %
+              </div>
+              <div class="text-sm dark:text-zinc-400">Performa</div>
             </div>
           </div>
 
@@ -47,4 +51,10 @@
 
 <script setup lang="ts">
 const useConfig = useConfigStore()
+
+const client = useSanctumClient();
+const { data, status, error, refresh } = await useAsyncData(
+    'dashboard-welcome',
+    () => client('/api/dashboard/welcome')
+)
 </script>
