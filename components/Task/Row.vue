@@ -36,7 +36,15 @@
       </div>
     </div>
 
-    <div v-for="day in daysInMonth" :key="day.date" class="flex items-center z-1">
+    <div 
+      v-for="day in daysInMonth"
+      :key="day.date" 
+      :data-date="day.date" 
+      class="flex items-center z-1"
+      :class="[
+        toDay==day.date ? 'bg-blue-200 dark:bg-zinc-700' : '',
+      ]"
+    >
       <span
         v-if="isInRange(task, day.date)"
         class="px-2 text-xs text-white w-full inline-block py-1 min-h-5 cursor-pointer"
@@ -47,6 +55,8 @@
           formatDatenoClock(task.start)==day.date ? 'rounded-s-lg' : '',
           formatDatenoClock(task.end)==day.date ? 'rounded-e-lg' : '',
         ]"
+        :data-datestart="formatDatenoClock(task.start)"
+        :data-dateend="formatDatenoClock(task.end)"
       >
       </span>
 
@@ -56,6 +66,8 @@
 </template>
 
 <script setup>
+import { useDayjs } from '#dayjs'
+const dayjs = useDayjs()
 defineProps({
   task: Object,
   daysInMonth: Array,
@@ -64,6 +76,8 @@ defineProps({
   selectedCategory: String
 });
 const emits = defineEmits(['goToDetail', 'goToEdit']);
+const toDay = dayjs().format('YYYY-MM-DD')
+
 //set color
 const setColor = (status) => {
   if (status == 'completed') {
@@ -79,8 +93,9 @@ const setColor = (status) => {
 
 //tanggal tanpa jam
 const formatDatenoClock = (date) => {
-  const tanggal = new Date(date);
-  const tanggalSaja = tanggal.toISOString().split('T')[0];
+  // const tanggal = new Date(date);
+  // const tanggalSaja = tanggal.toISOString().split('T')[0];
+  const tanggalSaja = dayjs(date).format('YYYY-MM-DD')
   return tanggalSaja; 
 }
 
