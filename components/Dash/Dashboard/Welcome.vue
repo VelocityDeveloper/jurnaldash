@@ -1,5 +1,5 @@
 <template>
-  <Card class="!bg-emerald-50 dark:!bg-zinc-800 shadow-sm">
+  <Card class="bg-primary-100 dark:bg-zinc-800 shadow-sm">
     <template #content>
 
       <div class="grid grid-cols-12">
@@ -19,7 +19,7 @@
                 }"
               />
             </div>
-            <div class="font-bold text-zinc-800 dark:text-white">
+            <div class="font-bold text-primary-500 dark:text-white">
               Selamat Datang, {{ useConfig.config.user?.name }} !!
             </div>
           </div>

@@ -32,8 +32,8 @@ const setChartData = () => {
         datasets: [
             {
                 label: 'Pembuatan',
-                backgroundColor: documentStyle.getPropertyValue('--p-emerald-500'),
-                borderColor: documentStyle.getPropertyValue('--p-emerald-500'),
+                backgroundColor: documentStyle.getPropertyValue('--primary'),
+                borderColor: documentStyle.getPropertyValue('--primary'),
                 data: [25, 90, 40, 81],
                 pointRadius: 0,
                 tension: 0.4

@@ -32,8 +32,8 @@ const setChartData = () => {
         datasets: [
             {
                 label: 'My First dataset',
-                backgroundColor: documentStyle.getPropertyValue('--p-emerald-500'),
-                borderColor: documentStyle.getPropertyValue('--p-emerald-500'),
+                backgroundColor: documentStyle.getPropertyValue('--primary'),
+                borderColor: documentStyle.getPropertyValue('--primary'),
                 data: [25, 59, 40, 81, 56, 80, 90],
                 pointRadius: 0,
                 tension: 0.4
