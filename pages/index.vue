@@ -18,6 +18,8 @@
     </div>
   </div>
   
+  <DashDashboardDataTable />
+  
   <!-- <div class="flex flex-col md:flex-row gap-5">
     <div class="md:basis-[35%]">
       <DashDashboardChartBar />

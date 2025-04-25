@@ -1,28 +1,30 @@
 <template>
-  <Card class="bg-primary-100 dark:bg-zinc-800 shadow-sm">
+  <Card class="!bg-primary-100 dark:!bg-zinc-800 shadow-sm">
     <template #content>
 
       <div class="grid grid-cols-12">
         <div class="lg:col-span-9 md:col-span-7 sm:col-span-12 col-span-12">
 
-          <div class="flex items-center gap-3 mb-8">
-            <div>
-              <Avatar 
-                :image="useConfig.config.user?.avatar_url" 
-                shape="circle"         
-                :pt="{
-                  image: (options) => ({
-                      class: [
-                          '!object-cover',
-                      ]
-                  })
-                }"
-              />
-            </div>
-            <div class="font-bold text-primary-500 dark:text-white">
-              Selamat Datang, {{ useConfig.config.user?.name }} !!
-            </div>
+          <div class="font-bold text-primary-500 dark:text-white">
+              Selamat Datang,
           </div>
+          
+          <AvatarGroup v-if="data.users" class="mt-3 mb-5">
+            <Avatar
+              v-for="user in data.users"
+              :image="user.avatar"
+              shape="circle"
+              :pt="{
+                image: (options) => ({
+                    class: [
+                        '!object-cover',
+                    ]
+                })
+              }"
+              v-tooltip.top="user.name"
+              />
+          </AvatarGroup>
+
           <div class="flex items-center gap-6">
             <div class="border-r border-gray-200 pr-6">
               <div class="text-2xl md:text-3xl text-zinc-900 dark:text-white">

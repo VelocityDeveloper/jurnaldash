@@ -2,35 +2,39 @@
   <Card class="md:h-[100%] dark:bg-zinc-800">
     <template #content>
       
-      <div>
-        <div class="dark:text-zinc-400">Post terbaru</div>
+      <div class="mb-3">
+        <div class="dark:text-zinc-400">Task Terbaru</div>
       </div>
 
-      <DataTable v-if="data" :value="data.data" size="small" stripedRows scrollable>
-        <Column field="title" header="Title">
+      <DataTable v-if="data" :value="data.data" size="small" class="text-sm" stripedRows scrollable>
+        <Column field="title" header="Title" />
+        <Column field="user" header="User">
           <template #body="slotProps">
-            <div @click="openDialog(slotProps.data)" class="flex cursor-pointer">
-              <img 
-                class="aspect-square object-cover w-8 h-8" 
-                :src="slotProps.data?.featured_image?.thumbnail ?? slotProps.data?.featured_image?.default"
-                :alt="slotProps.data?.title"
+            <div class="flex items-center gap-2">
+              <Avatar
+              :image="slotProps.data.user.avatar_url"
+              shape="circle"
+              :pt="{
+                image: (options) => ({
+                    class: [
+                        '!object-cover',
+                    ]
+                })
+              }"
+              v-tooltip.top="slotProps.data.user.name"
               />
-              <div class="ms-2 text-xs truncate">
-                {{ slotProps.data?.title }}
-              </div>
+              {{ slotProps.data?.user?.name }}
             </div>
           </template>
         </Column>
-        <Column field="author" header="Author" class="text-xs">
+        <Column field="category" header="Category" />
+        <Column field="start" header="Start" />
+        <Column field="status" header="Status">
           <template #body="slotProps">
-            {{ slotProps.data?.author?.name }}
+            <TaskStatus :value="slotProps.data.status" />
           </template>
         </Column>
-        <Column field="date" header="Date">
-          <template #body="slotProps">
-            <span class="text-xs"> {{ slotProps.data?.date }} </span>
-          </template>
-        </Column>
+        
       </DataTable>
 
     </template>
