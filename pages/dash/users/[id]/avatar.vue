@@ -26,6 +26,8 @@
 definePageMeta({
   title: 'Profile User',
   description: 'Pengaturan Avatar User',
+  middleware: ["auth"],
+  permission: 'edit-other-user'
 })
 
 const route = useRoute()

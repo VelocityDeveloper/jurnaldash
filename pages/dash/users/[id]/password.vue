@@ -34,6 +34,8 @@
   definePageMeta({
     title: 'Profile User',
     description: 'Pengaturan Password User',
+    middleware: ["auth"],
+    permission: 'edit-other-user'
   })
   const route = useRoute()
   const client = useSanctumClient();

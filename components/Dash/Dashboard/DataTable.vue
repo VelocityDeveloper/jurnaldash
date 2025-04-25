@@ -12,7 +12,7 @@
           <template #body="slotProps">
             <div class="flex items-center gap-2">
               <Avatar
-              :image="slotProps.data.user.avatar_url"
+              :image="slotProps.data.user?.avatar_url"
               shape="circle"
               :pt="{
                 image: (options) => ({
