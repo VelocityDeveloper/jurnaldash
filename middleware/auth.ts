@@ -10,19 +10,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const metaPermission = to.meta.permission as never;
     const configPermission = computed(() => User.value?.user_permissions ?? []);
 
-    // cek 'edit-other-user'
-    if ((metaPermission === 'edit-other-user' && !configPermission.value.includes(metaPermission)) || User.value?.id !== to.params.id) {
-        
-        // if (User.value?.id !== to.params.id) {
-            return navigateTo('/403') // halaman tidak punya akses
-        // }
-        
-    } else if (metaPermission === 'edit-other-user') {
+    console.log(User.value?.id, to.params.id)
+    if ((metaPermission === 'edit-other-user' && configPermission.value.includes(metaPermission)) || User.value?.id === Number(to.params.id)) {
         return true
-    }
-
-    // Cek permissions
-    if (metaPermission && configPermission && !configPermission.value.includes(metaPermission)) {
+    } else if (metaPermission && configPermission && !configPermission.value.includes(metaPermission)) {
         return navigateTo('/403') // halaman tidak punya akses
     }
     
