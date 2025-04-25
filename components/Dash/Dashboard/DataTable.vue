@@ -23,7 +23,6 @@
               }"
               v-tooltip.top="slotProps.data.user.name"
               />
-              {{ slotProps.data?.user?.name }}
             </div>
           </template>
         </Column>
@@ -37,6 +36,22 @@
         
       </DataTable>
 
+      <div class="flex justify-end">
+        <Paginator
+            :rows="data.per_page"
+            :totalRecords="data.total"
+            @page="onPaginate"
+            :pt="{
+                root: (event: any) => {
+                    const itemForPage =  data.per_page;
+                    const currentPage =  page - 1;
+                    event.state.d_first = itemForPage * currentPage;
+                },
+            }"
+        >
+        </Paginator>
+      </div>
+
     </template>
   </Card>
 
@@ -48,10 +63,15 @@
 
 <script setup lang="ts">
 const client = useSanctumClient();
+const page = ref(1);
 const { data, status, error, refresh } = await useAsyncData(
-    'dashboard-datatable',
-    () => client('/api/dashboard/datatable')
+    'dashboard-datatable-page'+page.value,
+    () => client('/api/dashboard/datatable?page='+page.value)
 )
+const onPaginate = (event: { page: number }) => {
+    page.value = event.page + 1; 
+    refresh()
+};
 
 const dialog = ref(false);
 const selectedItem = ref();
