@@ -56,6 +56,8 @@
   definePageMeta({
       title: 'Profile User',
       description: 'Pengaturan Profil User',
+      middleware: ["auth"],
+      permission: 'edit-other-user'
   })
   const useConfig = useConfigStore()
   const route = useRoute()

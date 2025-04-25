@@ -21,8 +21,13 @@ const useConfig = useConfigStore()
 const client = useSanctumClient();
 
 onMounted( async () => {
-    const getconfig = await client('/api/dash/config');
-    useConfig.setConfig(getconfig);
+    try {
+        const getconfig = await client('/api/dash/config');
+        useConfig.setConfig(getconfig);
+    } catch (error) {
+      const er = useSanctumError(error);
+      console.log(er);
+    }
 });
 
 const route = useRoute();
