@@ -25,11 +25,12 @@
     
     <div class="mt-4 mb-3 overflow-x-auto"> 
       <div class="flex flex-row gap-2">    
-        <div @click="selectCategory('')" class="cursor-pointer relative border rounded p-3 text-nowrap min-w-[8em] bg-teal-100 dark:bg-teal-900 dark:border-zinc-600">
+        <div @click="selectCategory('')" class="cursor-pointer relative border rounded p-3 text-nowrap min-w-[7em] bg-teal-100 dark:bg-teal-900 dark:border-zinc-600">
           <div class="text-sm opacity-50">Semua</div>
           <div class="text-lg font-bold">{{ summarySum }}</div>
+          <span v-if="selectedCategory === ''" class="w-3 h-3 rounded-full bg-sky-400 dark:bg-sky-800 absolute top-1 right-1"></span>
         </div>
-        <div v-for="item in summaryArray" :key="item.category" @click="selectCategory(item.category)" class="cursor-pointer relative border dark:border-zinc-600 rounded p-3 text-nowrap min-w-[8em]" :class="[item.category === 'Project' ? 'bg-sky-100 dark:bg-sky-900' : item.category === 'Pengembangan' ? 'bg-amber-100 dark:bg-amber-900' : 'bg-zinc-100 dark:bg-zinc-900']">
+        <div v-for="item in summaryArray" :key="item.category" @click="selectCategory(item.category)" class="cursor-pointer relative border dark:border-zinc-600 rounded p-3 text-nowrap min-w-[7em]" :class="[item.category === 'Project' ? 'bg-sky-100 dark:bg-sky-900' : item.category === 'Pengembangan' ? 'bg-amber-100 dark:bg-amber-900' : 'bg-zinc-100 dark:bg-zinc-900']">
           <div class="text-sm opacity-50">{{ item.category }}</div>
           <div class="text-lg font-bold">{{ item.count }}</div>
           <span v-if="item.category === selectedCategory" class="w-3 h-3 rounded-full bg-sky-400 dark:bg-sky-800 absolute top-1 right-1"></span>
@@ -40,7 +41,7 @@
     <div class="border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
       <div class="overflow-auto max-h-[70vh]">
         <div class="min-w-max list-task">
-          <CalendarHeader :daysInMonth="theDays" :gridTemplate="gridTemplate" />
+          <CalendarHeader :daysInMonth="theDays" :gridTemplate="gridTemplate" :user="formSearch.user" :users="optionUsers" />
           <div v-if="status === 'pending'">
             <Skeleton v-for="i in 15" :key="i" width="100%" height="2rem" class="mb-2 mx-1" />
           </div>

@@ -3,8 +3,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
         id: number;
         user_permissions: [];
     }
-    const route = useRoute()
-
     const User = useSanctumUser<User>();
 
     const metaPermission = to.meta.permission as never;
