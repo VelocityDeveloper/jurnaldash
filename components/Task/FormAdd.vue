@@ -49,6 +49,8 @@ const isLoading = ref(false)
 const isLoadingDelete = ref(false)
 const toast = useToast()
 const confirm = useConfirm()
+import { useDayjs } from '#dayjs'
+const dayjs = useDayjs()
 
 //dapatkan option category
 const categorys = ref([]);
@@ -123,6 +125,12 @@ const form = reactive({
 
 const handleFormSubmit = async () => {
   isLoading.value = true;
+
+  //ubah form.start dan form.end ke format yyyy-mm-dd h:m:s
+  form.start = dayjs(form.start).format('YYYY-MM-DD HH:mm:ss');
+  form.end = dayjs(form.end).format('YYYY-MM-DD HH:mm:ss');
+
+
   if(props.item) {
     try {
       const responseUpdate = await client(`/api/task/${props.item.id}`, {
